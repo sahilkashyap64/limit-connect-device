@@ -84,7 +84,7 @@ use Jenssegers\Agent\Agent;
         //    ])->orderBy('modified_on', 'desc')
         //    ->get()->toArray();
          //  print_r($prevConnectLoginIntime); 
-
+          //get last login entry of the user
            $data = App\SessionTable::select('logintime')->addSelect('id')
            ->where([
            ['status', '=', '1'],
@@ -110,8 +110,35 @@ use Jenssegers\Agent\Agent;
           }
           
            }
+           echo 'ids';
+           print_r($myarr);
            //'connected_devices'=> DB::raw('connected_devices-1'),
+           $decremen=count($myarr);// number of id we will use this number to decrement the last value
            $updatedExpireConcrenteUser=App\SessionTable::whereIn('id', $myarr)->update(['status' => 0,'modified_on' => Carbon::now()]);
+         //  $updatedConnectedDeviceNum=App\SessionTable::whereIn('id', $myarr)->update(['connected_devices' => 0,'modified_on' => Carbon::now()]);
+           
+           if(!is_null($myarr)){
+
+        //check max device connected with user_id
+        
+           $prevConnectDeviceMaxcount=App\SessionTable::where([
+            ['status', '=', 1],
+            ['users_id', '=',$user_id ]
+        ])->orderBy('connected_devices','desc')->first(); echo 'Max count';
+           $maxdevice=$prevConnectDeviceMaxcount['connected_devices']; 
+          $lastid=$prevConnectDeviceMaxcount['id'];
+           
+           
+           
+           $newnumofDevice= $maxdevice-$decremen;  //newNumofDevice
+           if(!$lastid== ''){
+           
+               
+               App\SessionTable::where('id', $lastid)->update([
+                'connected_devices' => $newnumofDevice
+                ]);
+            }
+             }
            print_r($myarr); exit;
            
            if($updatedExpireConcrenteUser) {
