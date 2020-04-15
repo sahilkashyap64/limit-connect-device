@@ -97,10 +97,10 @@ use Jenssegers\Agent\Agent;
               $logintime=$fieldnam->logintime;
               $dateTimeMinutesAgo = new DateTime("2 minutes ago");
               $dateTimeMinutesAgo = $dateTimeMinutesAgo->format("Y-m-d H:i:s");
-              echo "\r\n Login:";
-              echo $logintime;
-              echo "\r\n datetimeTwominutes ago:";
-              echo $dateTimeMinutesAgo;
+            //   echo "\r\n Login:";
+            //   echo $logintime;
+            //   echo "\r\n datetimeTwominutes ago:";
+            //   echo $dateTimeMinutesAgo;
               if ($logintime <  $dateTimeMinutesAgo){
               //  echo "true";
               
@@ -110,8 +110,8 @@ use Jenssegers\Agent\Agent;
           }
           
            }
-           echo 'ids';
-           print_r($myarr);
+           //echo 'ids';
+          // print_r($myarr);
            //'connected_devices'=> DB::raw('connected_devices-1'),
            $decremen=count($myarr);// number of id we will use this number to decrement the last value
            $updatedExpireConcrenteUser=App\SessionTable::whereIn('id', $myarr)->update(['status' => 0,'modified_on' => Carbon::now()]);
@@ -124,7 +124,7 @@ use Jenssegers\Agent\Agent;
            $prevConnectDeviceMaxcount=App\SessionTable::where([
             ['status', '=', 1],
             ['users_id', '=',$user_id ]
-        ])->orderBy('connected_devices','desc')->first(); echo 'Max count';
+        ])->orderBy('connected_devices','desc')->first(); //echo 'Max count';
            $maxdevice=$prevConnectDeviceMaxcount['connected_devices']; 
           $lastid=$prevConnectDeviceMaxcount['id'];
            
@@ -139,7 +139,7 @@ use Jenssegers\Agent\Agent;
                 ]);
             }
              }
-           print_r($myarr); exit;
+           //print_r($myarr); exit;
            
            if($updatedExpireConcrenteUser) {
             return response()->json([
