@@ -32,11 +32,15 @@ use Jenssegers\Agent\Agent;
         $task->modified_on = $date;
          
         if($task->save()){
+          echo 'first logged in successfully \r\n ';
+          echo 'token:'.$token;
+          echo 'updatedid '.$task->id;
         return response()->json([
       
           'success' => true,
           'token' => $token,
-          'msg'=>'first logged in successfully'
+          'msg'=>'first logged in successfully',
+          'updatedid'=>$task->id,
           
           
       ]);}
@@ -72,11 +76,24 @@ use Jenssegers\Agent\Agent;
         $task->created_on = $date;
         $task->modified_on = $date;
         $task->save();
+        if($task->save()){
+          echo '2nd or 3rd login in successfully \r\n ';
+          echo 'token:'.$token;
+          echo 'updatedid '.$task->id;
+          
+          return response()->json([
+        
+            'success' => true,
+            'token' => $token,
+            'msg'=>'you are logged in successfully',
+            'updatedid'=>$task->id,
+            
+        ]);}
         
        
 
     }else if (count(($active_session)) >= $login_limit) {
-        
+        //automatic logout
         // $prevConnectLoginIntime = App\SessionTable::select('logintime')->addSelect('id')
         //   ->where([
         //   ['status', '=', '1'],
@@ -84,7 +101,8 @@ use Jenssegers\Agent\Agent;
         //    ])->orderBy('modified_on', 'desc')
         //    ->get()->toArray();
          //  print_r($prevConnectLoginIntime); 
-          //get last login entry of the user
+          //get last login entry of the 
+          
            $data = App\SessionTable::select('logintime')->addSelect('id')
            ->where([
            ['status', '=', '1'],
@@ -104,9 +122,8 @@ use Jenssegers\Agent\Agent;
               if ($logintime <  $dateTimeMinutesAgo){
               //  echo "true";
               
-               array_push($myarr,$fieldnam->id );
-                
-        // $fieldnam->logintime ;
+               array_push($myarr,$fieldnam->id );                
+        
           }
           
            }
@@ -142,6 +159,7 @@ use Jenssegers\Agent\Agent;
            //print_r($myarr); exit;
            
            if($updatedExpireConcrenteUser) {
+             echo "logged out automatically successful";
             return response()->json([
                 'success' => true,
                 'msg'=>'hello',
@@ -159,10 +177,12 @@ use Jenssegers\Agent\Agent;
         
         
 
-        echo 'you are not allowed to login as you have breeched the maximum session limit.';
+        echo 'you are not allowed to login as you have reached the maximum session limit.';
 
     } else {
         
+      echo 'finally logged in successfully';
+      echo 'token:'.$token;
     return response()->json([
       
         'success' => true,
