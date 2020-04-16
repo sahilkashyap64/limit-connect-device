@@ -32,18 +32,15 @@ use Jenssegers\Agent\Agent;
         $task->modified_on = $date;
          
         if($task->save()){
-          echo 'first logged in successfully \r\n ';
-          echo 'token:'.$token;
-          echo 'updatedid '.$task->id;
         return response()->json([
       
           'success' => true,
           'token' => $token,
-          'msg'=>'first logged in successfully',
+          'msg'=>'first logged in successfully \r\n ',
           'updatedid'=>$task->id,
           
           
-      ]);}
+      ])->send();}
 
         }
         else if (count($active_session) > 0 && count($active_session) < $login_limit) {
@@ -77,18 +74,15 @@ use Jenssegers\Agent\Agent;
         $task->modified_on = $date;
         $task->save();
         if($task->save()){
-          echo '2nd or 3rd login in successfully \r\n ';
-          echo 'token:'.$token;
-          echo 'updatedid '.$task->id;
           
           return response()->json([
         
             'success' => true,
             'token' => $token,
-            'msg'=>'you are logged in successfully',
+            'msg'=>'2nd or 3rd login in successfully \r\n ',
             'updatedid'=>$task->id,
             
-        ]);}
+        ])->send();}
         
        
 
@@ -150,21 +144,21 @@ use Jenssegers\Agent\Agent;
            $newnumofDevice= $maxdevice-$decremen;  //newNumofDevice
            if(!$lastid== ''){
            
-               
+               //now update the new number of device in last active id
                App\SessionTable::where('id', $lastid)->update([
                 'connected_devices' => $newnumofDevice
                 ]);
             }
              }
-           //print_r($myarr); exit;
+           
            
            if($updatedExpireConcrenteUser) {
-             echo "logged out automatically successful";
+             
             return response()->json([
                 'success' => true,
-                'msg'=>'hello',
+                'msg'=>'logged out automatically successful',
                 'myid'=>$myarr,
-            ]);
+            ])->send();
         } 
          
            
@@ -174,10 +168,13 @@ use Jenssegers\Agent\Agent;
         //then return a login error that maximum logins reached
         //echo 'you are not allowed to login as you have breeched the maximum session limit.';
         //exit;
-        
+        return response()->json([
+          'success' => true,
+          'msg'=>'Your account is in use on 5 devices. Please stop playing on other devices to continue',
+          //'loggedindeviceinfointheseId'=>$myarr,
+      ])->send();
         
 
-        echo 'you are not allowed to login as you have reached the maximum session limit.';
 
     } else {
         
@@ -187,10 +184,10 @@ use Jenssegers\Agent\Agent;
       
         'success' => true,
         'token' => $token,
-        'msg'=>'logged in successfully'
+        'msg'=>'finally logged in successfully'
         
         
-    ]);
+    ])->send();
     }
 
     //update the logins column to equal to json_encode($logins);
